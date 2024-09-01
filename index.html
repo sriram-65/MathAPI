@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Problem Solver</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Math Problem Solver</h1>
+
+        <!-- Linear Equation Solver -->
+        <div class="solver">
+            <h2>Solve Linear Equation (ax + b = 0)</h2>
+            <input type="number" id="linear-a" placeholder="a" />
+            <input type="number" id="linear-b" placeholder="b" />
+            <button onclick="solveLinearEquation()">Solve</button>
+            <p id="linear-result"></p>
+        </div>
+
+        <!-- Quadratic Equation Solver -->
+        <div class="solver">
+            <h2>Solve Quadratic Equation (ax^2 + bx + c = 0)</h2>
+            <input type="number" id="quadratic-a" placeholder="a" />
+            <input type="number" id="quadratic-b" placeholder="b" />
+            <input type="number" id="quadratic-c" placeholder="c" />
+            <button onclick="solveQuadraticEquation()">Solve</button>
+            <p id="quadratic-result"></p>
+        </div>
+
+        <!-- Factorial Calculation -->
+        <div class="solver">
+            <h2>Calculate Factorial (n!)</h2>
+            <input type="number" id="factorial-n" placeholder="n" />
+            <button onclick="calculateFactorial()">Calculate</button>
+            <p id="factorial-result"></p>
+        </div>
+
+        <!-- GCD Calculation -->
+        <div class="solver">
+            <h2>Calculate GCD (a, b)</h2>
+            <input type="number" id="gcd-a" placeholder="a" />
+            <input type="number" id="gcd-b" placeholder="b" />
+            <button onclick="calculateGCD()">Calculate</button>
+            <p id="gcd-result"></p>
+        </div>
+
+        <!-- LCM Calculation -->
+        <div class="solver">
+            <h2>Calculate LCM (a, b)</h2>
+            <input type="number" id="lcm-a" placeholder="a" />
+            <input type="number" id="lcm-b" placeholder="b" />
+            <button onclick="calculateLCM()">Calculate</button>
+            <p id="lcm-result"></p>
+        </div>
+
+        <!-- Matrix Multiplication -->
+        <div class="solver">
+            <h2>Matrix Multiplication</h2>
+            <textarea id="matrixA" placeholder="Matrix A (e.g., [[1,2],[3,4]])"></textarea>
+            <textarea id="matrixB" placeholder="Matrix B (e.g., [[5,6],[7,8]])"></textarea>
+            <button onclick="multiplyMatrices()">Multiply</button>
+            <p id="matrix-result"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.solver {
+    margin-bottom: 30px;
+}
+
+.solver h2 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.solver input, .solver textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.solver button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.solver button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    margin-top: 10px;
+    color: #333;
+}
+</style>
+
+<script>
+  
+  // Replace this with your Serveo link
+const API_BASE_URL = 'https://09058f8894df9b1ba7c8f3ac55abff80.serveo.net';
+
+// Helper function to send POST requests
+async function sendPostRequest(endpoint, data) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    return response.json();
+}
+
+// Solve Linear Equation
+function solveLinearEquation() {
+    const a = parseFloat(document.getElementById('linear-a').value);
+    const b = parseFloat(document.getElementById('linear-b').value);
+    
+    sendPostRequest('/solve-linear', { a, b })
+        .then(data => {
+            document.getElementById('linear-result').textContent = `Solution: x = ${data.solution}`;
+        });
+        
+}
+
+// Solve Quadratic Equation
+function solveQuadraticEquation() {
+    const a = parseFloat(document.getElementById('quadratic-a').value);
+    const b = parseFloat(document.getElementById('quadratic-b').value);
+    const c = parseFloat(document.getElementById('quadratic-c').value);
+    
+    sendPostRequest('/solve-quadratic', { a, b, c })
+        .then(data => {
+            const result = Array.isArray(data.solution) ? data.solution.join(', ') : data.solution;
+            document.getElementById('quadratic-result').textContent = `Solutions: ${result}`;
+        });
+}
+
+// Calculate Factorial
+function calculateFactorial() {
+    const n = parseInt(document.getElementById('factorial-n').value, 10);
+    
+    sendPostRequest('/factorial', { n })
+        .then(data => {
+            document.getElementById('factorial-result').textContent = `Factorial: ${data.result}`;
+        });
+}
+
+// Calculate GCD
+function calculateGCD() {
+    const a = parseInt(document.getElementById('gcd-a').value, 10);
+    const b = parseInt(document.getElementById('gcd-b').value, 10);
+    
+    sendPostRequest('/gcd', { a, b })
+        .then(data => {
+            document.getElementById('gcd-result').textContent = `GCD: ${data.result}`;
+        });
+}
+
+// Calculate LCM
+function calculateLCM() {
+    const a = parseInt(document.getElementById('lcm-a').value, 10);
+    const b = parseInt(document.getElementById('lcm-b').value, 10);
+    
+    sendPostRequest('/lcm', { a, b })
+        .then(data => {
+            document.getElementById('lcm-result').textContent = `LCM: ${data.result}`;
+        });
+}
+
+// Matrix Multiplication
+function multiplyMatrices() {
+    const matrixA = JSON.parse(document.getElementById('matrixA').value);
+    const matrixB = JSON.parse(document.getElementById('matrixB').value);
+    
+    sendPostRequest('/matrix-multiply', { matrixA, matrixB })
+        .then(data => {
+            document.getElementById('matrix-result').textContent = `Result: ${JSON.stringify(data.result)}`;
+        });
+}
+</script>
